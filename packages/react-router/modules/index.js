@@ -207,7 +207,7 @@ export function Router({ children = null, history, timeout = 2000 }) {
   return (
     <LocationContext.Provider
       children={children}
-      value={{ history, location, pending }}
+      value={{ history, location, pending, startTransition }}
     />
   );
 }
@@ -377,6 +377,13 @@ export function usePending() {
  */
 export function useHistory() {
   return React.useContext(LocationContext).history;
+}
+
+/**
+ * Returns the startTransition in Router (for library use)
+ */
+export function useStartTransition() {
+  return React.useContext(LocationContext).startTransition;
 }
 
 /**
