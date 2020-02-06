@@ -373,6 +373,13 @@ export function usePending() {
 }
 
 /**
+ * Returns the history in Router (for library use)
+ */
+export function useHistory() {
+  return React.useContext(LocationContext).history;
+}
+
+/**
  * Returns true if the URL for the given "to" value matches the current URL.
  * This is useful for components that need to know "active" state, e.g.
  * <NavLink>.
