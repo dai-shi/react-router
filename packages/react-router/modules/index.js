@@ -188,6 +188,7 @@ export function Router({ children = null, history, timeout = 2000 }) {
   let [location, setLocation] = React.useState(history.location);
   let [startTransition, pending] = useTransition({ timeoutMs: timeout });
   let listeningRef = React.useRef(false);
+  let childListeners = React.useRef([]);
 
   invariant(
     !React.useContext(LocationContext),
@@ -195,10 +196,20 @@ export function Router({ children = null, history, timeout = 2000 }) {
       ` You never need more than one.`
   );
 
+  let listen = React.useCallback(fn => {
+    childListeners.current.push(fn);
+    fn(history.location); // call once with current location
+    return () => {
+      let index = childListeners.indexOf(fn);
+      childListeners.current.splice(index, 1);
+    };
+  }, [history]);
+
   if (!listeningRef.current) {
     listeningRef.current = true;
     history.listen(({ location }) => {
       startTransition(() => {
+        childListeners.current.forEach(fn => fn(location));
         setLocation(location);
       });
     });
@@ -207,7 +218,7 @@ export function Router({ children = null, history, timeout = 2000 }) {
   return (
     <LocationContext.Provider
       children={children}
-      value={{ history, location, pending, startTransition }}
+      value={{ history, location, pending, listen }}
     />
   );
 }
@@ -373,17 +384,11 @@ export function usePending() {
 }
 
 /**
- * Returns the history in Router (for library use)
+ * Returns the listen in Router (for library use)
+ * Same as history.listen but called in startTransition
  */
-export function useHistory() {
-  return React.useContext(LocationContext).history;
-}
-
-/**
- * Returns the startTransition in Router (for library use)
- */
-export function useStartTransition() {
-  return React.useContext(LocationContext).startTransition;
+export function useListen() {
+  return React.useContext(LocationContext).listen;
 }
 
 /**
