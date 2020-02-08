@@ -200,7 +200,7 @@ export function Router({ children = null, history, timeout = 2000 }) {
     childListeners.current.push(fn);
     fn(history.location); // call once with current location
     return () => {
-      let index = childListeners.indexOf(fn);
+      let index = childListeners.current.indexOf(fn);
       childListeners.current.splice(index, 1);
     };
   }, [history]);
