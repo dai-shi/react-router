@@ -91,7 +91,7 @@ $ npm install history@5 react-router@6 react-router-dom@6
 Follow the instructions in the [React documentation to set up a new project with
 Create React
 App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app),
-then follow [the instructions above](/#install-with-a-package-manager) to
+then follow [the instructions above](#install-with-a-package-manager) to
 install React Router in your project.
 
 Once your project is set up and React Router is installed as a dependency, open
@@ -205,7 +205,7 @@ on deploying with React Router to be sure your server is configured correctly.
 
 Follow the instructions in the [Parcel documentation to set up a new
 project](https://parceljs.org/getting_started.html), then follow [the
-instructions above](/#install-with-a-package-manager) to install React Router in
+instructions above](#install-with-a-package-manager) to install React Router in
 your project. You will also need to install `react`, `react-dom` and
 `@babel/preset-react`.
 
@@ -333,15 +333,14 @@ and voila! You successfully set up React Router using Parcel! 🥳
 
 Follow the instructions in the [webpack documentation to set up a new
 project](https://webpack.js.org/guides/getting-started/), then follow [the
-instructions above](/#install-with-a-package-manager) to install React Router in
+instructions above](#install-with-a-package-manager) to install React Router in
 your project.
 
 Setting up a new React project in webpack is a bit more involved than Parcel or
 Create React App. Because webpack is a low-level tool that allows you to
 fine-tune your build to your liking, you may want to read the [webpack
-documentation](https://webpack.js.org/), [explore some online
-tutorials](https://www.freecodecamp.org/news/part-1-react-app-from-scratch-using-webpack-4-562b1d231e75/),
-or check out [webpack configurations in other
+documentation](https://webpack.js.org/) or check out [webpack configurations in
+other
 repos](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js)
 to understand how to build your own.
 
@@ -356,7 +355,7 @@ Then, somewhere in your code (probably towards the root of your React component
 tree) you'll want to `import` the pieces you need from `react-router-dom`.
 
 ```js
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (

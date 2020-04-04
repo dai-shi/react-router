@@ -12,7 +12,7 @@ how to upgrade your v4/5 app to v6 while hopefully being able to ship as often
 as possible as you go.
 
 If you are just getting started with React Router or you'd like to try out v6 in
-a new app, please see [the Getting Started guide](getting-started.md).
+a new app, please see [the Getting Started guide](../installation/getting-started.md).
 
 The examples in this guide will show code samples of how you might have built
 something in a v5 app, followed by how you would accomplish the same thing in
@@ -36,11 +36,10 @@ In general, the process looks like this:
     - Consolidate your `<Route>`s into a nested config (optional)
   - [Use `navigate` instead of `history`](#use-navigate-instead-of-history)
     - Use `useNavigate` hook instead of `useHistory`
-    - Use `<Navigate>` instead of `<Redirect>` (outside of route configs)
-      - No need to change `<Redirect>` directly inside `<Routes>`
+    - Use `<Navigate>` instead of `<Redirect>`
   - [Use `useRoutes` instead of `react-router-config`](#use-useroutes-instead-of-react-router-config)
   - [Rename `<Link component>` to `<Link as>`](#rename-link-component-to-link-as)
-  - [Get `StaticRouter` from `react-router-dom/server`](#get-staticrouter-from-react-router-dom-server)
+  - [Get `StaticRouter` from `react-router-dom/server`](#get-staticrouter-from-react-router-domserver)
 
 ## Upgrade to React v16.8
 
@@ -168,7 +167,7 @@ put them in the child route's component.
 
 ```js
 // This is a React Router v5 app
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 
 function App() {
   return (
@@ -521,8 +520,6 @@ function App() {
         { path: 'sent', element: <SentInvoices /> }
       ]
     },
-    // Redirects use a redirectTo property to
-    { path: 'home', redirectTo: '/' },
     // Not found routes work as you'd expect
     { path: '*', element: <NotFound /> }
   ]);
@@ -604,6 +601,49 @@ function App() {
 }
 ```
 
+If you're currently using `go`, `goBack` or `goForward` from `useHistory` to
+navigate backwards and forwards, you should also replace these with `navigate`
+with a numerical argument indicating where to move the pointer in the history
+stack. For example, here is some code using v5's `useHistory` hook:
+
+```js
+// This is a React Router v5 app
+import { useHistory } from 'react-router-dom';
+
+function App() {
+  const { go, goBack, goForward } = useHistory();
+
+  return (
+    <>
+      <button onClick={() => go(-2)}>Go 2 pages back</button>
+      <button onClick={goBack}>Go back</button>
+      <button onClick={goForward}>Go forward</button>
+      <button onClick={() => go(2)}>Go 2 pages forward</button>
+    </>
+  );
+}
+```
+
+Here is the equivalent app with v6:
+
+```js
+// This is a React Router v6 app
+import { useNavigate } from 'react-router-dom';
+
+function App() {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <button onClick={() => navigate(-2)}>Go 2 pages back</button>
+      <button onClick={() => navigate(-1)}>Go back</button>
+      <button onClick={() => navigate(1)}>Go forward</button>
+      <button onClick={() => navigate(2)}>Go 2 pages forward</button>
+    </>
+  );
+}
+```
+
 Again, one of the main reasons we are moving from using the `history` API
 directly to the `navigate` API is to provide better compatibility with React
 suspense.  React Router v6 uses the `useTransition` hook at the root of your
@@ -614,9 +654,12 @@ The `navigate` API is aware of the internal pending transition state and will
 do a REPLACE instead of a PUSH onto the history stack, so the user doesn't end
 up with pages in their history that never actually loaded.
 
-*Note: You should still use a `<Redirect>` as part of your route config
-(inside a `<Routes>`). This change is only necessary for `<Redirect>`s that are
-used to navigate in response to user interaction.*
+*Note: The `<Redirect>` element from v5 is no longer supported as part of your
+route config (inside a `<Routes>`). This is due to upcoming changes in React
+that make it unsafe to alter the state of the router during the initial render.
+If you need to redirect immediately, you can either a) do it on your server
+(probably the best solution) or b) render a `<Navigate>` element in your route
+component. However, recognize that the navigation will happen in a `useEffect`.*
 
 Aside from suspense compatibility, `navigate`, like `Link`, supports relative
 navigation. For example:

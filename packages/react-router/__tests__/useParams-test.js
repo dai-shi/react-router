@@ -107,4 +107,86 @@ describe('useParams', () => {
       });
     });
   });
+
+  describe('when the path has percent-encoded params', () => {
+    it('returns an object of the decoded params', () => {
+      let params;
+      function BlogPost() {
+        params = useParams();
+        return null;
+      }
+
+      createTestRenderer(
+        <Router initialEntries={['/blog/react%20router']}>
+          <Routes>
+            <Route path="/blog/:slug" element={<BlogPost />} />
+          </Routes>
+        </Router>
+      );
+
+      expect(typeof params).toBe('object');
+      expect(params).toMatchObject({
+        slug: 'react router'
+      });
+    });
+  });
+
+  describe('when the path has a + character', () => {
+    it('returns an object of the decoded params', () => {
+      let params;
+      function BlogPost() {
+        params = useParams();
+        return null;
+      }
+
+      createTestRenderer(
+        <Router initialEntries={['/blog/react+router+is%20awesome']}>
+          <Routes>
+            <Route path="/blog/:slug" element={<BlogPost />} />
+          </Routes>
+        </Router>
+      );
+
+      expect(typeof params).toBe('object');
+      expect(params).toMatchObject({
+        slug: 'react router is awesome'
+      });
+    });
+  });
+
+  describe('when the path has a malformed param', () => {
+    let consoleWarn;
+    beforeEach(() => {
+      consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      consoleWarn.mockRestore();
+    });
+
+    it('returns the raw value and warns', () => {
+      let params;
+      function BlogPost() {
+        params = useParams();
+        return null;
+      }
+
+      createTestRenderer(
+        <Router initialEntries={['/blog/react%2router']}>
+          <Routes>
+            <Route path="/blog/:slug" element={<BlogPost />} />
+          </Routes>
+        </Router>
+      );
+
+      expect(typeof params).toBe('object');
+      expect(params).toMatchObject({
+        slug: 'react%2router'
+      });
+
+      expect(consoleWarn).toHaveBeenCalledWith(
+        expect.stringMatching('malformed URL segment')
+      );
+    });
+  });
 });

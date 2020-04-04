@@ -12,14 +12,21 @@ We will cover the following topics:
 
 - [History and Location](#history-and-location)
   - [URLs and Location State](#urls-and-location-state)
+  - [Params and Search (Query) Strings](#params-and-search-query-strings)
 - [Routing and Navigation](#routing-and-navigation)
   - [Layouts and Nesting](#layouts-and-nesting)
   - [Transitions](#transitions)
   - [Prompts](#prompts)
-  - [Redirects](#redirects)
-- [Params and Queries](#params-and-queries)
 
 ## History and Location
+
+TODO
+
+### URLs and Location State
+
+TODO
+
+### Params and Search (Query) Strings
 
 TODO
 
@@ -31,18 +38,10 @@ TODO
 
 TODO
 
-### Redirects
-
-TODO
-
 ### Transitions
 
 TODO
 
 ### Prompts
-
-TODO
-
-## Params and Queries
 
 TODO
