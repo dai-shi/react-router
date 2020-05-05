@@ -45,7 +45,8 @@ const LocationContext = React.createContext<LocationContextObject>({
   history: null,
   location: null,
   pending: false,
-  static: false
+  static: false,
+  listen: () => () => undefined
 });
 
 interface LocationContextObject {
@@ -53,6 +54,7 @@ interface LocationContextObject {
   location: Location | null;
   pending: boolean;
   static: boolean;
+  listen: (fn: (l: Location) => void) => () => void;
 }
 
 if (__DEV__) {
