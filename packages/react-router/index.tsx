@@ -368,14 +368,6 @@ export function useBlocker(blocker: Blocker, when: boolean = true): void {
 }
 
 /**
- * Returns the listen in Router (for library use)
- * Same as history.listen but called in startTransition
- */
-export function useListen() {
-  return React.useContext(LocationContext).listen;
-}
-
-/**
  * Returns the full href for the given "to" value. This is useful for building
  * custom links that are also accessible and preserve right-click behavior.
  */
@@ -425,6 +417,14 @@ export function useLocation(): Location {
  */
 export function useLocationPending(): boolean {
   return React.useContext(LocationContext).pending;
+}
+
+/**
+ * Returns the listen in Router (for library use)
+ * Same as history.listen but called in startTransition
+ */
+export function useLocationListen() {
+  return React.useContext(LocationContext).listen;
 }
 
 /**
